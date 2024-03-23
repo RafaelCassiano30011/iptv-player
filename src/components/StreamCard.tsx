@@ -5,8 +5,12 @@ interface Props {
 }
 
 export default function StreamCard({ img, name, stream_id }: Props) {
+
+
   return (
-    <li className="max-w-48 w-full object-contain cursor-pointer">
+    <li onClick={()=>{
+      console.log(stream_id)
+    }} className="max-w-48 w-full object-contain cursor-pointer">
       <img src={img} alt={name} />
       <h3 className="text-gray-200 font-bold mt-3">{name}</h3>
     </li>
