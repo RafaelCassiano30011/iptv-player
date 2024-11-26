@@ -10,6 +10,6 @@ body {
   @apply w-svw h-svh;
 }
 
-ul[data-no-scroll='true']::-webkit-scrollbar {
+ul[data-no-scroll="true"]::-webkit-scrollbar {
   display: none;
 }

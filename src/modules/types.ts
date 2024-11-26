@@ -1,3 +1,7 @@
+export const types: Type[] = ["live", "movies", "series"];
+
+export type Type = "live" | "movies" | "series";
+
 export interface Serverinfo {
   xui: boolean;
   version: string;

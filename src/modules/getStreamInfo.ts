@@ -1,8 +1,7 @@
+import { getUser } from "../utils/getUser";
 import { BASE_URL } from "./index";
 
 interface GetStreamsProps {
-  username: string;
-  password: string;
   type: "live" | "series" | "movies";
   stream_id: string;
 }
@@ -39,7 +38,9 @@ const streamsKeysFetch = {
   movies: "vod",
 };
 
-async function getStreams({ username, password, type, stream_id }: GetStreamsProps): Promise<Stream[]> {
+async function getStreams({ type, stream_id }: GetStreamsProps): Promise<Stream[]> {
+  const { username, password } = getUser();
+
   const response = await fetch(
     `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}_info&${streamsKeysFetch[type]}_id=${stream_id}`
   );

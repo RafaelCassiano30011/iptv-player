@@ -1,3 +1,4 @@
+import { useGlobal } from "../context/Global";
 import { CategorieType } from "../modules/getCategories";
 
 interface Props {
@@ -6,6 +7,8 @@ interface Props {
 }
 
 export default function ListCategories({ handleFunction, categories }: Props) {
+  const { removeSelectStream } = useGlobal();
+
   return (
     <ul
       data-no-scroll="true"
@@ -19,6 +22,7 @@ export default function ListCategories({ handleFunction, categories }: Props) {
           <button
             onClick={() => {
               handleFunction(item.category_id);
+              removeSelectStream();
             }}
             className="outline-none border-0 p-5 w-full text-left"
           >

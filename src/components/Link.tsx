@@ -7,7 +7,7 @@ interface Props extends LinkProps {
 
 export default function LinkCustom({ text, ...rest }: Props) {
   return (
-    <Link className="text-gray-200 font-black p-5 bg-neutral-800 hover:bg-transparent transition-all rounded" {...rest}>
+    <Link className="text-white font-black p-5 bg-cyan-500 hover:bg-cyan-800 transition-all rounded" {...rest}>
       {text}
     </Link>
   );
