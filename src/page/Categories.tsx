@@ -29,8 +29,6 @@ function Categories() {
 
   const categoriesType = categories[type];
 
-  console.log(categoriesType);
-
   if (!categoriesType) return null;
 
   return (
