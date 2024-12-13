@@ -1,8 +1,8 @@
 import { getUser } from "../utils/getUser";
-import { BASE_URL } from "./index";
 
 interface GetStreamsProps {
   type: "live" | "series" | "movies";
+  stream_id: string;
 }
 
 export interface Stream {
@@ -32,19 +32,19 @@ export interface Stream {
 }
 
 const streamsKeysFetch = {
-  live: "live_streams",
+  live: "live",
   series: "series",
-  movies: "vod_streams",
+  movies: "vod",
 };
 
-async function getStreamsAll({ type }: GetStreamsProps): Promise<Stream[]> {
-  const { username, password } = getUser();
+async function getStreams({ type, stream_id }: GetStreamsProps): Promise<Stream[]> {
+  const { username, password, dns: BASE_URL } = getUser();
 
   const response = await fetch(
-    `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}`
+    `http://localhost:3000/proxy/${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}_info&${streamsKeysFetch[type]}_id=${stream_id}`
   );
 
   return await response.json();
 }
 
-export { getStreamsAll };
+export { getStreams };

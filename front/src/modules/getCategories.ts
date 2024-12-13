@@ -1,5 +1,4 @@
 import { getUser } from "../utils/getUser";
-import { BASE_URL } from "./index";
 import { Type } from "./types";
 
 interface GetCategoriesProps {
@@ -19,10 +18,10 @@ const categoriesKeysFetch = {
 };
 
 async function getCategories({ type }: GetCategoriesProps): Promise<CategorieType[]> {
-  const { username, password } = getUser();
+  const { username, password, dns: BASE_URL } = getUser();
 
   const response = await fetch(
-    `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${categoriesKeysFetch[type]}_categories`
+    `http://localhost:3000/proxy/${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${categoriesKeysFetch[type]}_categories`
   );
 
   return await response.json();

@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [formState, setFormState] = useState({
-    username: "",
-    password: "",
+    username: import.meta.env.VITE_USERNAME ?? "",
+    password: import.meta.env.VITE_PASSWORD ?? "",
+    dns: import.meta.env.VITE_DNS ?? "",
   });
 
   const navigate = useNavigate();
@@ -18,16 +19,16 @@ export default function Login() {
     navigate("/");
   }, []);
 
-  const { username, password } = formState;
+  const { username, password, dns } = formState;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const data = await iptvLogin(formState);
+    const data = await iptvLogin({ ...formState, BASE_URL: dns });
 
     if (data.user_info.status.toLocaleLowerCase() === "active") {
       localStorage.setItem("userLogin", JSON.stringify(formState));
-      setFormState({ username: "", password: "" });
+      setFormState({ username: "", password: "", dns: "" });
       navigate("/");
     }
   };
@@ -49,7 +50,20 @@ export default function Login() {
           className="pl-3 py-1 w-full outline-none border-2 border-transparent focus:border-cyan-500 rounded-lg transition-all font-bold text-base text-white bg-neutral-800"
         />
 
-        <button className="w-full py-1 text-base bg-cyan-500 hover:bg-cyan-700 transition-all rounded-lg font-bold text-white" type="submit">Logar</button>
+        <input
+          onChange={(e) => setFormState({ ...formState, dns: e.target.value })}
+          value={dns}
+          placeholder="URL do DNS"
+          type="text"
+          className="pl-3 py-1 w-full outline-none border-2 border-transparent focus:border-cyan-500 rounded-lg transition-all font-bold text-base text-white bg-neutral-800"
+        />
+
+        <button
+          className="w-full py-1 text-base bg-cyan-500 hover:bg-cyan-700 transition-all rounded-lg font-bold text-white"
+          type="submit"
+        >
+          Logar
+        </button>
       </form>
     </div>
   );
