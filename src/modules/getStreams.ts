@@ -41,7 +41,7 @@ async function getStreams({ type, category_id }: GetStreamsProps): Promise<Strea
   const { username, password, dns: BASE_URL } = getUser();
 
   const response = await fetch(
-    `http://localhost:3000/proxy/${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}&category_id=${category_id}`
+    `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}&category_id=${category_id}`
   );
 
   return await response.json();

@@ -1,8 +1,10 @@
+import { Login } from "@/context/Global";
 import { getUser } from "../utils/getUser";
 import { Type } from "./types";
 
 interface GetCategoriesProps {
   type: Type;
+  formState: Login;
 }
 
 export interface CategorieType {
@@ -17,11 +19,15 @@ const categoriesKeysFetch = {
   movies: "vod",
 };
 
-async function getCategories({ type }: GetCategoriesProps): Promise<CategorieType[]> {
-  const { username, password, dns: BASE_URL } = getUser();
+async function getCategories({ type, formState }: GetCategoriesProps): Promise<CategorieType[]> {
+  const { username, password, dns: BASE_URL } = formState;
+
+  console.log(
+    `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${categoriesKeysFetch[type]}_categories`
+  );
 
   const response = await fetch(
-    `http://localhost:3000/proxy/${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${categoriesKeysFetch[type]}_categories`
+    `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${categoriesKeysFetch[type]}_categories`
   );
 
   return await response.json();

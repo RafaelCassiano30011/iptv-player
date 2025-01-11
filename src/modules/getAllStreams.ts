@@ -1,7 +1,9 @@
-import { getUser } from "../utils/getUser";
+import { Login } from "@/context/Global";
+import axios from "axios";
 
 interface GetStreamsProps {
   type: "live" | "series" | "movies";
+  formState: Login;
 }
 
 export interface Stream {
@@ -36,14 +38,14 @@ const streamsKeysFetch = {
   movies: "vod_streams",
 };
 
-async function getStreamsAll({ type }: GetStreamsProps): Promise<Stream[]> {
-  const { username, password, dns: BASE_URL } = getUser();
+async function getStreamsAll({ type, formState }: GetStreamsProps): Promise<Stream[]> {
+  const { username, password, dns: BASE_URL } = formState;
 
-  const response = await fetch(
-    `http://localhost:3000/proxy/${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}`
-  );
+  const response = axios.post("/api/proxy", {
+    url: `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}`,
+  });
 
-  return await response.json();
+  return (await response).data;
 }
 
 export { getStreamsAll };

@@ -1,16 +1,21 @@
-import { proxy } from "../api";
 import { LoginResponse } from "./types";
+import axios from "axios";
 
-interface IptvLoginProps {
+export interface IptvLoginProps {
   username: string;
   password: string;
   BASE_URL: string;
 }
 
 export async function iptvLogin({ username, password, BASE_URL }: IptvLoginProps): Promise<LoginResponse> {
-  const response = await proxy(`${BASE_URL}/player_api.php?username=${username}&password=${password}`);
+  console.log(`${BASE_URL}/player_api.php?username=${username}&password=${password}`);
 
-  const data = await response.data;
+  const response = axios.post("/api/proxy", {
+    url: `${BASE_URL}/player_api.php?username=${username}&password=${password}`,
+  });
+
+  const data = (await response).data;
+
 
   return data;
 }

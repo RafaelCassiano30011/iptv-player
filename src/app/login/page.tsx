@@ -1,24 +1,11 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React from "react";
 import { iptvLogin } from "../../modules/login";
-
+import { useGlobal } from "@/context/Global";
 
 export default function Login() {
-  const [formState, setFormState] = useState({
-    username: import.meta.env.VITE_USERNAME ?? "",
-    password: import.meta.env.VITE_PASSWORD ?? "",
-    dns: import.meta.env.VITE_DNS ?? "",
-  });
-
-  //const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!localStorage.getItem("userLogin")) return;
-
-    //navigate("/");
-  }, []);
+  const { setFormState, formState } = useGlobal();
 
   const { username, password, dns } = formState;
 
@@ -27,9 +14,11 @@ export default function Login() {
 
     const data = await iptvLogin({ ...formState, BASE_URL: dns });
 
+    console.log(data)
+
     if (data.user_info.status.toLocaleLowerCase() === "active") {
       localStorage.setItem("userLogin", JSON.stringify(formState));
-      setFormState({ username: "", password: "", dns: "" });
+      window.location.href = "/";
       //navigate("/");
     }
   };

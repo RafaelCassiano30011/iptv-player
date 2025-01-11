@@ -1,18 +1,7 @@
-"use client";
-
-import { useEffect } from "react";
 import LinkCustom from "../components/Link";
 
 export default function Home() {
   //const navigate = useNavigate();
-
-  useEffect(() => {
-    const userLogin = window.localStorage.getItem("userLogin");
-
-    if (userLogin) return;
-
-    //navigate("/login");
-  }, []);
 
   return (
     <div className="flex justify-center items-center h-full gap-20">

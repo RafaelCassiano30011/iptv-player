@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import {  Inter, Inter_Tight } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
+import GlobalProvider from "@/context/Global";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -24,7 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <GlobalProvider>{children}</GlobalProvider>
+      </body>
     </html>
   );
 }
