@@ -7,10 +7,19 @@ interface IptvLoginProps {
   BASE_URL: string;
 }
 
-export async function iptvLogin({ username, password, BASE_URL }: IptvLoginProps): Promise<LoginResponse> {
-  const response = await proxy(`${BASE_URL}/player_api.php?username=${username}&password=${password}`);
+export async function login({ username, password, BASE_URL }: IptvLoginProps): Promise<LoginResponse | null> {
+  try {
+    const response = await proxy(`${BASE_URL}/player_api.php?username=${username}&password=${password}`);
 
-  const data = await response.data;
+    const data = await response.data;
 
-  return data;
+    return data;
+  } catch (err) {
+    console.error({
+      module: "login",
+      err,
+    });
+  }
+
+  return null;
 }

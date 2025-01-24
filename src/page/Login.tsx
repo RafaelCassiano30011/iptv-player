@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { iptvLogin } from "../modules/login";
+import { login } from "../modules/login";
 
 import { useNavigate } from "react-router-dom";
+import { createdUser } from "../modules/createdUser";
+import { getUser } from "../modules/getUser";
 
 export default function Login() {
   const [formState, setFormState] = useState({
@@ -14,9 +16,11 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("userLogin")) return;
+    const userLogin = localStorage.getItem("userLogin");
 
-    navigate("/");
+    if (!userLogin) return;
+
+    navigate("/profiles");
   }, []);
 
   const { username, password, dns } = formState;
@@ -24,12 +28,23 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const data = await iptvLogin({ ...formState, BASE_URL: dns });
+    const data = await login({ ...formState, BASE_URL: dns });
 
-    if (data.user_info.status.toLocaleLowerCase() === "active") {
+    if (data && data?.user_info.status.toLocaleLowerCase() === "active") {
+      const userAlreadyExist = await getUser(username);
+
+      if (!userAlreadyExist) {
+        const userCreated = await createdUser(username);
+
+        if (!userCreated) return;
+
+        localStorage.setItem("user_id", userCreated.id);
+      } else {
+        localStorage.setItem("user_id", userAlreadyExist.id);
+      }
+
       localStorage.setItem("userLogin", JSON.stringify(formState));
-      setFormState({ username: "", password: "", dns: "" });
-      navigate("/");
+      navigate("/profiles");
     }
   };
 
