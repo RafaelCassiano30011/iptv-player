@@ -1,3 +1,4 @@
+import { proxy } from "../api";
 import { getUser } from "../utils/getUser";
 
 interface GetStreamsProps {
@@ -39,11 +40,11 @@ const streamsKeysFetch = {
 async function getStreamsAll({ type }: GetStreamsProps): Promise<Stream[]> {
   const { username, password, dns: BASE_URL } = getUser();
 
-  const response = await fetch(
-    `http://localhost:3000/proxy/${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}`
+  const response = await proxy(
+    `${BASE_URL}/player_api.php?&username=${username}&password=${password}&action=get_${streamsKeysFetch[type]}`
   );
-
-  return await response.json();
+  
+  return await response.data;
 }
 
 export { getStreamsAll };

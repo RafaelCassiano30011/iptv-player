@@ -2,22 +2,35 @@ import { useEffect, useState } from "react";
 import { Profile } from "../types";
 import { getProfiles } from "../modules/getProfiles";
 import { GoPlus } from "react-icons/go";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import { addProfile } from "../modules/addProfiles";
+import { useNavigate } from "react-router-dom";
+import Avatar from "../components/Avatar";
 
 export default function Profiles() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [isAddingProfile, setIsAddingProfile] = useState(false);
   const [newProfileName, setNewProfileName] = useState("");
 
-  const handleAddProfile = () => {
+  const navigate = useNavigate();
+
+  const handleAddProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) return;
+
+    const profile = await addProfile({ name: newProfileName, user_id });
+
+    setIsAddingProfile(false);
+    setProfiles([...profiles, profile]);
   };
 
   useEffect(() => {
     const user_id = localStorage.getItem("user_id");
 
-    if (!user_id) return;
+    if (!user_id) return navigate("/");
 
     const fetchProfiles = async () => {
       const profilesResponse = await getProfiles(user_id);
@@ -33,21 +46,25 @@ export default function Profiles() {
   return (
     <div className="flex justify-center items-center h-full w-full bg-neutral-900">
       {isAddingProfile ? (
-        <form className="flex" onSubmit={handleAddProfile}>
-          <input
+        <form className="flex flex-col gap-5" onSubmit={handleAddProfile}>
+          <Input
             onChange={(e) => setNewProfileName(e.target.value)}
             value={newProfileName}
             type="text"
             placeholder="Nome do Perfil"
           />
-          <button>Adicionar</button>
+          <Button>Adicionar</Button>
         </form>
       ) : (
-        <ul>
+        <ul className="flex items-center gap-6">
           {profiles.map((profile) => (
-            <li className="text-white font-semibold text-8xl" key={profile.id}>
-              {profile.name}
-            </li>
+            <Avatar
+              name={profile.name}
+              onClick={() => {
+                localStorage.setItem("profile_id", profile.id);
+                navigate("/home");
+              }}
+            />
           ))}
 
           <button
